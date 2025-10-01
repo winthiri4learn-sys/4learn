@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Win Thiri POS - Mobile</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <header class="header">
+            <h1 class="app-title">Win Thiri POS</h1>
+            <button class="settings-btn" onclick="showPage('settings')"><i class="fas fa-cog"></i></button>
+        </header>
+
+        <main class="content-area">
+
+            <section id="sales" class="page active sale-page">
+                <div class="sales-main-grid">
+                    
+                    <div class="item-selection-col">
+                        <div class="search-bar">
+                            <input type="text" id="item-search" placeholder="ပစ္စည်းအမည် ရှာဖွေပါ...">
+                        </div>
+                        <div id="item-grid" class="item-grid">
+                            </div>
+                    </div>
+
+                    <div class="cart-checkout-col">
+                        <h3>🛒 အရောင်းစာရင်း (Cart)</h3>
+                        <ul id="cart-list" class="cart-list">
+                            </ul>
+
+                        <div class="cart-summary-footer">
+                            <div class="summary-line">
+                                <span>စုစုပေါင်း (Subtotal):</span>
+                                <span id="sub-total" class="amount">0.00 ကျပ်</span>
+                            </div>
+                            <div class="summary-line tax-line">
+                                <span>အခွန်နှုန်း (<span id="tax-rate-display">0</span>%):</span>
+                                <span id="tax-amount" class="amount">0.00 ကျပ်</span>
+                            </div>
+                            <div class="summary-line grand-total">
+                                <span>💰 စုစုပေါင်း:</span>
+                                <span id="total-amount" class="amount large-amount">0.00 ကျပ်</span>
+                            </div>
+                            <button class="checkout-btn" onclick="checkout()">ငွေရှင်းမည်</button>
+                            <button class="clear-cart-btn" onclick="clearCart()">စာရင်းရှင်းလင်းမည်</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="item-management" class="page">
+                <h2>📦 ပစ္စည်းစီမံခန့်ခွဲမှု</h2>
+                <button class="add-new-btn" onclick="showItemForm()">+ ပစ္စည်းအသစ် ထည့်မည်</button>
+                <div id="item-form-container" class="form-container hidden">
+                    <h3>ပစ္စည်းအသေးစိတ်</h3>
+                    <form id="item-form">
+                        <input type="hidden" id="item-id">
+                        <label for="item-name">အမည်:</label>
+                        <input type="text" id="item-name" required>
+    
+                        <label for="purchase-price">ဝယ်ယူစျေး (ရင်းနှီးငွေ):</label>
+                        <input type="number" id="purchase-price" step="0.01" required>
+    
+                        <label for="sale-price">ရောင်းစျေး (ဖောက်သည်စျေး):</label>
+                        <input type="number" id="sale-price" step="0.01" required>
+                        
+                        <label for="item-stock">စတော့ခ် အရေအတွက်:</label>
+                        <input type="number" id="item-stock" required value="0">
+    
+                        <button type="submit" id="save-item-btn">ပစ္စည်း သိမ်းဆည်းမည်</button>
+                    </form>
+                </div>
+
+                <h3 style="margin-top: 20px;">လက်ရှိပစ္စည်းများ စာရင်း</h3>
+                <ul id="item-list" class="list-management">
+                    </ul>
+            </section>
+
+            <section id="history" class="page">
+                <h2>📜 မှတ်တမ်းများ</h2>
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="showHistory('sale')">ရောင်းချမှုမှတ်တမ်း</button>
+                    <button class="tab-btn" onclick="showHistory('purchase')">ဝယ်ယူမှုမှတ်တမ်း</button>
+                </div>
+                
+                <div id="history-content">
+                    <ul id="sale-history-list" class="list-management active"></ul>
+                    <ul id="purchase-history-list" class="list-management"></ul>
+                </div>
+            </section>
+
+            <section id="settings" class="page">
+                <h2>⚙️ စနစ်နှင့် လုပ်ငန်းအချက်အလက်</h2>
+                
+                <h3>ℹ️ လုပ်ငန်းအချက်အလက် (Info)</h3>
+                <form id="info-form" class="sub-form">
+                    <label for="business-name">လုပ်ငန်းအမည် (Business Name):</label>
+                    <input type="text" id="business-name" required>
+
+                    <label for="phone">ဖုန်းနံပါတ်:</label>
+                    <input type="tel" id="phone">
+
+                    <label for="address">လိပ်စာ:</label>
+                    <textarea id="address"></textarea>
+
+                    <button type="submit">အချက်အလက် သိမ်းဆည်းမည်</button>
+                </form>
+
+                <h3 style="margin-top: 30px;">စနစ်ဆိုင်ရာ ပြင်ဆင်မှုများ (Setting)</h3>
+                <form id="settings-form" class="sub-form">
+                    <label for="currency">ငွေကြေးယူနစ်:</label>
+                    <input type="text" id="currency" required>
+
+                    <label for="tax-rate">အခွန်နှုန်း (&#37;):</label>
+                    <input type="number" id="tax-rate" step="0.1" value="0">
+
+                    <button type="submit">စနစ် ပြင်ဆင်မှုများ သိမ်းဆည်းမည်</button>
+                </form>
+                
+                <h3 style="margin-top: 30px;">ဝယ်ယူမှု မှတ်တမ်း စီမံခန့်ခွဲမှု</h3>
+                <button class="add-new-btn" onclick="showPurchaseForm()">+ ဝယ်ယူမှု အသစ် ထည့်မည်</button>
+                
+                <div id="purchase-form-container" class="form-container hidden">
+                    <h3>ဝယ်ယူမှု အသေးစိတ်</h3>
+                    <form id="purchase-form">
+                        <input type="hidden" id="purchase-id">
+                        
+                        <label for="purchase-item-name">ပစ္စည်းအမည်:</label>
+                        <input type="text" id="purchase-item-name" required placeholder="ဝယ်ယူသည့် ပစ္စည်းအမည်">
+
+                        <label for="purchase-qty">အရေအတွက်:</label>
+                        <input type="number" id="purchase-qty" required value="1" min="1">
+    
+                        <label for="purchase-total">စုစုပေါင်း ပေးချေငွေ:</label>
+                        <input type="number" id="purchase-total" step="0.01" required placeholder="ဝယ်ယူရန် ပေးချေလိုက်သည့် စုစုပေါင်းငွေ">
+                        
+                        <button type="submit" id="save-purchase-btn">မှတ်တမ်း သိမ်းဆည်းမည်</button>
+                    </form>
+                </div>
+                
+                <ul id="purchase-management-list" class="list-management">
+                    </ul>
+                </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="showPage('sales')"><i class="fas fa-cash-register"></i> အရောင်း</button>
+            <button class="nav-btn" onclick="showPage('item-management')"><i class="fas fa-box"></i> ပစ္စည်း</button>
+            <button class="nav-btn" onclick="showPage('history')"><i class="fas fa-history"></i> မှတ်တမ်း</button>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
